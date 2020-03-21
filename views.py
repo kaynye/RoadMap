@@ -8,9 +8,16 @@ from datetime import timedelta, datetime, tzinfo
 # Create your views here.
 
 def home(request):
+    """
+    Point d"entree de l'application, rend la vue
+    """
     return render(request,"roadmap/home.html")
 
 def getRessources(request):
+    """
+    Resultat d'un appel ajax
+    Sert a recurerer la liste des ressources
+    """
     resResource=[]
     for ressource in SujetTraite.objects.all().order_by("s_sprintDebut"):
             dicoRessource={}
@@ -19,7 +26,13 @@ def getRessources(request):
             resResource.append(dicoRessource)
     return JsonResponse(resResource,safe=False)
 
+
+
 def getEvents(request):
+    """
+    Resultat d'un appel ajax
+    Sert a recurerer la liste des evenements du fullCalendar
+    """
     resEvent=[]        
     for sujetTraite in SujetTraite.objects.all().order_by("s_sprintDebut"):
         date=sujetTraite.s_RoadMap.r_dateDebut
@@ -37,6 +50,11 @@ def getEvents(request):
     return JsonResponse(resEvent,safe=False)
 
 def ajouteSiWeek(date,nombre):
+    """
+    fonction utiliser dans getEvents
+    prend en parametre une date et un nombre de jour
+    ajoute le nombre de jour indiqué dans nombre a la date en excluant le resultat le weekend
+    """
     compteur=1
     for i in range(0,nombre):
         day=date + timedelta(days=compteur)
